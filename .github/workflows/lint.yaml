@@ -1,0 +1,43 @@
+---
+
+name: Lint
+
+on:
+  workflow_call:
+    inputs:
+      cabal-artifact-name:
+        required: false
+        type: string
+      docker-image:
+        default: ghcr.io/danieljtrowbridge/docker-fourmolu
+        required: false
+        type: string
+      docker-tag:
+        default: latest
+        required: false
+        type: string
+      package:
+        required: true
+        type: string
+
+jobs:
+  lint:
+    container:
+      credentials:
+        password: ${{ secrets.github_token }}
+        username: ${{ github.actor }}
+      image: ${{ inputs.docker-image }}:${{ inputs.docker-tag }}
+    name: Lint ${{ inputs.package }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - if: inputs.cabal-artifact-name
+        name: Download ${{ inputs.package }}.cabal
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.cabal-artifact-name }}
+      - name: Check code formatting
+        run: fourmolu --mode check ${{ inputs.package }}

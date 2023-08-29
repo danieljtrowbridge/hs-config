@@ -5,15 +5,21 @@ name: Test
 on:
   workflow_call:
     inputs:
-      ghc-version:
-        required: true
+      cabal-artifact-name:
+        required: false
         type: string
-      package:
+      cabal-artifact-path:
+        required: false
+        type: string
+      ghc-version:
         required: true
         type: string
       os:
         default: ubuntu-latest
         required: false
+        type: string
+      package:
+        required: true
         type: string
 
 jobs:
@@ -33,3 +39,14 @@ jobs:
           stack-setup-ghc: true
       - name: Run ${{ inputs.package }} test suites
         run: stack test ${{ inputs.package }}
+      - if: inputs.cabal-artifact-name
+        name: Upload ${{ inputs.package }}.cabal
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.cabal-artifact-name }}
+          path: >-
+            ${{
+            inputs.cabal-artifact-path
+            ||
+            format('{0}/{0}.cabal', inputs.package)
+            }}
