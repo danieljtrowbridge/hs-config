@@ -22,6 +22,7 @@ pages:
   artifacts:
     paths:
       - public/
+  image: haskell:$[[ inputs.ghc_version ]]
   needs:
     - lint $[[ inputs.package ]]
   rules:
