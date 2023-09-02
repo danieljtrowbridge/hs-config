@@ -1,0 +1,46 @@
+spec:
+  inputs:
+    ghc_version:
+    package:
+    pages_command:
+      default: "true"
+    stack_options:
+      default: "--system-ghc"
+
+---
+
+lint $[[ inputs.package ]]:
+  image: ghcr.io/danieljtrowbridge/docker-fourmolu:$[[ inputs.ghc_version ]]
+  interruptible: true
+  needs:
+    - test $[[ inputs.package ]]
+  script:
+    - fourmolu --mode check $[[ inputs.package ]]
+  stage: lint
+
+pages:
+  artifacts:
+    paths:
+      - public/
+  needs:
+    - lint $[[ inputs.package ]]
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - >-
+      stack $[[ inputs.stack_options ]] haddock
+      --haddock-arguments "-o public/" --no-haddock-deps $[[ inputs.package ]]
+    - mv $[[ inputs.package ]]/public/ .
+    - $[[ inputs.pages_command ]]
+  stage: deploy
+
+test $[[ inputs.package ]]:
+  artifacts:
+    paths:
+      - $[[ inputs.package ]]/$[[ inputs.package ]].cabal
+  image: haskell:$[[ inputs.ghc_version ]]
+  interruptible: true
+  needs: []
+  script:
+    - stack $[[ inputs.stack_options ]] test $[[ inputs.package ]]
+  stage: test
