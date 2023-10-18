@@ -1,0 +1,17 @@
+spec:
+  inputs:
+    docker_image:
+      default: ghcr.io/danieljtrowbridge/docker-fourmolu
+    docker_tag:
+      default: latest
+    package:
+
+---
+
+lint $[[ inputs.package ]]:
+  image: $[[ inputs.docker_image ]]:$[[ inputs.docker_tag ]]
+  interruptible: true
+  needs: []
+  script:
+    - fourmolu --mode check $[[ inputs.package ]]
+  stage: lint

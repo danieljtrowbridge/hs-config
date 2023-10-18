@@ -2,43 +2,31 @@ spec:
   inputs:
     ghc_version:
     package:
-    pages_command:
+    pre_deploy_command:
       default: "true"
     stack_options:
-      default: "--system-ghc"
+      default: --system-ghc
 
 ---
 
-lint $[[ inputs.package ]]:
-  image: ghcr.io/danieljtrowbridge/docker-fourmolu:$[[ inputs.ghc_version ]]
-  interruptible: true
-  needs: []
-  script:
-    - fourmolu --mode check $[[ inputs.package ]]
-  stage: lint
-
-pages:
-  artifacts:
-    paths:
-      - public/
-  image: haskell:$[[ inputs.ghc_version ]]
-  needs:
-    - lint $[[ inputs.package ]]
-    - test $[[ inputs.package ]]
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  script:
-    - >-
-      stack $[[ inputs.stack_options ]] haddock
-      --haddock-arguments "-o public/" --no-haddock-deps $[[ inputs.package ]]
-    - mv $[[ inputs.package ]]/public/ .
-    - $[[ inputs.pages_command ]]
-  stage: deploy
-
-test $[[ inputs.package ]]:
-  image: haskell:$[[ inputs.ghc_version ]]
-  interruptible: true
-  needs: []
-  script:
-    - stack $[[ inputs.stack_options ]] test $[[ inputs.package ]]
-  stage: test
+include:
+  - inputs:
+      package: $[[ inputs.package ]]
+    remote:
+      "https://raw.githubusercontent.com/danieljtrowbridge/hs-config/main\
+      /gitlab-ci/lint.yaml"
+  - inputs:
+      ghc_version: $[[ inputs.ghc_version ]]
+      package: $[[ inputs.package ]]
+      pre_deploy_command: $[[ inputs.pre_deploy_command ]]
+      stack_options: $[[ inputs.stack_options ]]
+    remote:
+      "https://raw.githubusercontent.com/danieljtrowbridge/hs-config/main\
+      /gitlab-ci/pages.yaml"
+  - inputs:
+      ghc_version: $[[ inputs.ghc_version ]]
+      package: $[[ inputs.package ]]
+      stack_options: $[[ inputs.stack_options ]]
+    remote:
+      "https://raw.githubusercontent.com/danieljtrowbridge/hs-config/main\
+      /gitlab-ci/test.yaml"

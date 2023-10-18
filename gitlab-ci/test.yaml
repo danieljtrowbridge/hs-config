@@ -1,0 +1,15 @@
+spec:
+  inputs:
+    ghc_version:
+    package:
+    stack_options:
+
+---
+
+test $[[ inputs.package ]]:
+  image: haskell:$[[ inputs.ghc_version ]]
+  interruptible: true
+  needs: []
+  script:
+    - stack $[[ inputs.stack_options ]] test $[[ inputs.package ]]
+  stage: test
