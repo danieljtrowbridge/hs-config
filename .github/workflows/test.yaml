@@ -28,7 +28,7 @@ jobs:
         with:
           submodules: recursive
       - name: Set up Stack
-        uses: haskell/actions/setup@v2
+        uses: haskell-actions/setup@v2
         with:
           enable-stack: true
           ghc-version: ${{ inputs.ghc-version }}
