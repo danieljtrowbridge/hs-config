@@ -5,12 +5,6 @@ name: Test
 on:
   workflow_call:
     inputs:
-      cabal-artifact-name:
-        required: false
-        type: string
-      cabal-artifact-path:
-        required: false
-        type: string
       ghc-version:
         required: true
         type: string
@@ -51,14 +45,3 @@ jobs:
           path: .stack-work/
       - name: Run ${{ inputs.package }} test suites
         run: stack test ${{ inputs.package }}
-      - if: inputs.cabal-artifact-name
-        name: Upload ${{ inputs.package }}.cabal
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ inputs.cabal-artifact-name }}
-          path: >-
-            ${{
-            inputs.cabal-artifact-path
-            ||
-            format('{0}/{0}.cabal', inputs.package)
-            }}

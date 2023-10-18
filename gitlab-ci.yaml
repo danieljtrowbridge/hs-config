@@ -12,8 +12,7 @@ spec:
 lint $[[ inputs.package ]]:
   image: ghcr.io/danieljtrowbridge/docker-fourmolu:$[[ inputs.ghc_version ]]
   interruptible: true
-  needs:
-    - test $[[ inputs.package ]]
+  needs: []
   script:
     - fourmolu --mode check $[[ inputs.package ]]
   stage: lint
@@ -25,6 +24,7 @@ pages:
   image: haskell:$[[ inputs.ghc_version ]]
   needs:
     - lint $[[ inputs.package ]]
+    - test $[[ inputs.package ]]
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
@@ -36,9 +36,6 @@ pages:
   stage: deploy
 
 test $[[ inputs.package ]]:
-  artifacts:
-    paths:
-      - $[[ inputs.package ]]/$[[ inputs.package ]].cabal
   image: haskell:$[[ inputs.ghc_version ]]
   interruptible: true
   needs: []
