@@ -5,6 +5,9 @@ name: Deploy documentation
 on:
   workflow_call:
     inputs:
+      ghc-version:
+        required: true
+        type: string
       os:
         default: ubuntu-latest
         required: false
