@@ -18,6 +18,8 @@ on:
 
 jobs:
   build:
+    env:
+      STACK_ROOT: ${{ github.workspace }}/.stack-root
     name: Build ${{ inputs.package }} documentation
     runs-on: ${{ inputs.os }}
     steps:
