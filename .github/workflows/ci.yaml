@@ -1,0 +1,36 @@
+---
+
+name: CI
+
+on:
+  workflow_call:
+    inputs:
+      ghc-version:
+        required: true
+        type: string
+      package:
+        required: true
+        type: string
+
+jobs:
+  lint:
+    name: Lint ${{ inputs.package }}
+    uses: danieljtrowbridge/hs-config/.github/workflows/lint.yaml@main
+    with:
+      docker-tag: ${{ inputs.ghc-version }}
+      package: ${{ inputs.package }}
+  test:
+    name: Test ${{ inputs.package }}
+    uses: danieljtrowbridge/hs-config/.github/workflows/test.yaml@main
+    with:
+      ghc-version: ${{ inputs.ghc-version }}
+      package: ${{ inputs.package }}
+  docs:
+    name: Deploy ${{ inputs.package }} documentation to GitHub Pages
+    needs:
+      - lint
+      - test
+    uses: danieljtrowbridge/hs-config/.github/workflows/pages.yaml@main
+    with:
+      ghc-version: ${{ inputs.ghc-version }}
+      package: ${{ inputs.package }}

@@ -18,7 +18,7 @@ on:
 
 jobs:
   build:
-    name: Build {{ inputs.package }} documentation
+    name: Build ${{ inputs.package }} documentation
     runs-on: ${{ inputs.os }}
     steps:
       - name: Checkout
@@ -54,12 +54,13 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
-    name: Deploy {{ inputs.package }} documentation to GitHub Pages
+    name: Deploy ${{ inputs.package }} documentation to GitHub Pages
     needs:
       - build
     permissions:
       id-token: write
       pages: write
+    runs-on: ${{ inputs.os }}
     steps:
       - id: deploy
         name: Deploy
