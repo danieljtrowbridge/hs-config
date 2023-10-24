@@ -1,0 +1,29 @@
+---
+
+name: CI
+
+on:
+  workflow_call:
+    inputs:
+      ghc-version:
+        required: true
+        type: string
+      package:
+        required: true
+        type: string
+
+jobs:
+  ci:
+    name: CI
+    uses: danieljtrowbridge/hs-config/.github/workflows/ci.yaml@main
+    with:
+      ghc-version: ${{ inputs.ghc-version }}
+      package: ${{ inputs.package }}
+  docs:
+    name: Deploy ${{ inputs.package }} documentation to GitHub Pages
+    needs:
+      - ci
+    uses: danieljtrowbridge/hs-config/.github/workflows/pages.yaml@main
+    with:
+      ghc-version: ${{ inputs.ghc-version }}
+      package: ${{ inputs.package }}

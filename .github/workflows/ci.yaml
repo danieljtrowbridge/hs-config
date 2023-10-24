@@ -28,12 +28,3 @@ jobs:
     with:
       ghc-version: ${{ inputs.ghc-version }}
       package: ${{ inputs.package }}
-  docs:
-    name: Deploy ${{ inputs.package }} documentation to GitHub Pages
-    needs:
-      - lint
-      - test
-    uses: danieljtrowbridge/hs-config/.github/workflows/pages.yaml@main
-    with:
-      ghc-version: ${{ inputs.ghc-version }}
-      package: ${{ inputs.package }}
