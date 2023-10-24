@@ -23,10 +23,6 @@ jobs:
     name: Test ${{ inputs.package }}
     runs-on: ${{ inputs.os }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - name: Set up Stack
         uses: haskell-actions/setup@v2
         with:
@@ -43,5 +39,9 @@ jobs:
         with:
           key: ${{ inputs.package }}-stack-work
           path: .stack-work/
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Run ${{ inputs.package }} test suites
         run: stack test ${{ inputs.package }}
