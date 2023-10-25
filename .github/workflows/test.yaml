@@ -23,12 +23,6 @@ jobs:
     name: Test ${{ inputs.package }}
     runs-on: ${{ inputs.os }}
     steps:
-      - name: Set up Stack
-        uses: haskell-actions/setup@v2
-        with:
-          enable-stack: true
-          ghc-version: ${{ inputs.ghc-version }}
-          stack-setup-ghc: true
       - name: Restore Stack root directory
         uses: actions/cache@v3
         with:
@@ -39,6 +33,12 @@ jobs:
         with:
           key: ${{ inputs.package }}-stack-work
           path: .stack-work/
+      - name: Set up Stack
+        uses: haskell-actions/setup@v2
+        with:
+          enable-stack: true
+          ghc-version: ${{ inputs.ghc-version }}
+          stack-setup-ghc: true
       - name: Checkout
         uses: actions/checkout@v4
         with:
