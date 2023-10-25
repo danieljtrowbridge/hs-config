@@ -44,14 +44,14 @@ jobs:
         with:
           enable-stack: true
           ghc-version: ${{ inputs.ghc-version }}
-          stack-setup-ghc: true
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Build ${{ inputs.package }} documentation
         run: >-
-          stack haddock --haddock-arguments "-o public/" --no-haddock-deps
+          stack --system-ghc
+          haddock --haddock-arguments "-o public/" --no-haddock-deps
           ${{ inputs.package }}
       - name: Upload documentation artifact
         uses: actions/upload-pages-artifact@v2

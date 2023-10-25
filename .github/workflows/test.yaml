@@ -38,10 +38,9 @@ jobs:
         with:
           enable-stack: true
           ghc-version: ${{ inputs.ghc-version }}
-          stack-setup-ghc: true
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Run ${{ inputs.package }} test suites
-        run: stack test ${{ inputs.package }}
+        run: stack --system-ghc test ${{ inputs.package }}
