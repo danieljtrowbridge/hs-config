@@ -17,10 +17,16 @@ on:
         type: string
 
 jobs:
-  build:
+  deploy:
     env:
       STACK_ROOT: ${{ github.workspace }}/.stack-root
-    name: Build ${{ inputs.package }} documentation
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    name: Deploy ${{ inputs.package }} documentation to GitHub Pages
+    permissions:
+      id-token: write
+      pages: write
     runs-on: ${{ inputs.os }}
     steps:
       - name: Set up Stack
@@ -48,22 +54,9 @@ jobs:
           stack haddock --haddock-arguments "-o public/" --no-haddock-deps
           ${{ inputs.package }}
       - name: Upload documentation artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
-          name: github-pages
           path: ${{ inputs.package }}/public/
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
-    name: Deploy ${{ inputs.package }} documentation to GitHub Pages
-    needs:
-      - build
-    permissions:
-      id-token: write
-      pages: write
-    runs-on: ${{ inputs.os }}
-    steps:
       - id: deploy
         name: Deploy
         uses: actions/deploy-pages@v2
