@@ -20,6 +20,7 @@ jobs:
       ghc-version: ${{ inputs.ghc-version }}
       package: ${{ inputs.package }}
   docs:
+    if: github.event_name == 'push'
     name: Deploy ${{ inputs.package }} documentation to GitHub Pages
     needs:
       - ci
