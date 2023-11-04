@@ -9,23 +9,8 @@ on:
   push:
     branches:
       - main
-  workflow_call:
 
 jobs:
   yamllint:
     name: Run yamllint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          check-latest: true
-          python-version: "3.12"
-      - name: Install yamllint
-        run: pip install --user yamllint
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: Check YAML formatting
-        run: yamllint .
+    uses: danieljtrowbridge/meta-config/.github/workflows/yamllint.yaml@main
