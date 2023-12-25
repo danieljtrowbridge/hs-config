@@ -55,7 +55,7 @@ jobs:
           haddock --haddock-arguments "-o public/" --no-haddock-deps
           ${{ inputs.package }}
       - name: Upload documentation artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ inputs.package }}/public/
       - id: deploy
