@@ -30,12 +30,12 @@ jobs:
     runs-on: ${{ inputs.os }}
     steps:
       - name: Restore Stack root directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: stack-root
           path: .stack-root/
       - name: Restore ${{ inputs.package }} dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: ${{ inputs.package }}-stack-work
           path: .stack-work/
