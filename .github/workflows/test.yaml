@@ -40,7 +40,7 @@ jobs:
           ghc-version: ${{ inputs.ghc-version }}
           stack-no-global: true
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
       - name: Run ${{ inputs.package }} test suites
